@@ -24,36 +24,38 @@ function Projects() {
     , []);
 
 
-if(cloudId && cloudId.length > 0){
+  if (cloudId && cloudId.length > 0) {
 
-  return (
-    projects && projects.length > 0 ?
-      <>
-        <Flex h={'100vh'} direction={'column'}>
-          
-          <Nav pageTitle="Your Projects"/>
-          <Flex direction="column" align="center" h={'85%'}>
-            <Flex h={"fit-content"} w={"70%"} mt={10} p={10} justifyContent={'center'} borderRadius={15} bg="rgba(255,255,255,0.4)">
-              <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} spacing={10} w={'75%'}>
-                {projects.map((project,id) => (
-                    <ProjectCard key={id} project={project} cloudId={cloudId} />
-                ))}
-              </SimpleGrid>
+    return (
+      projects && projects.length > 0 ?
+        <>
+          <Flex minH={'100vh'} direction={'column'}>
+
+            <Nav pageTitle="Your Projects" />
+            <Flex direction="column" align="center"  h={'fit-content'}>
+              <Flex h={"fit-content"} w={"70%"} my={10} p={10} justifyContent={'center'} borderRadius={15} bg="rgba(255,255,255,0.4)">
+                <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} spacing={10} w={'100%'}>
+                  {projects.map((project, id) => (
+                    <>
+                      <ProjectCard key={id} project={project} cloudId={cloudId} />
+                    </>
+                  ))}
+                </SimpleGrid>
+              </Flex>
             </Flex>
           </Flex>
+        </>
+        :
+        <Flex direction="column" h={"100vh"}>
+          <Skeleton h={"5rem"} w={"full"}></Skeleton>
+          <Flex w={'100%'} justifyContent={'center'} >
+            <Skeleton h={"20rem"} w={"70%"} m={5}></Skeleton>
+          </Flex>
         </Flex>
-      </>
-      :
-      <Flex direction="column">
-        <Skeleton h={"5rem"} w={"full"}></Skeleton>
-        <Flex w={'100%'} justifyContent={'center'} >
-        <Skeleton h={"20rem"} w={"70%"} m={5}></Skeleton>
-        </Flex>
-      </Flex>
-  );
-}
-else{
-  navigate('/')
-}
+    );
+  }
+  else {
+    navigate('/')
+  }
 }
 export default Projects

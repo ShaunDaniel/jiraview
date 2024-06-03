@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { getIssuesByProjectID } from '../services/jiraService';
 import { useParams } from 'react-router-dom';
-import { SimpleGrid,Skeleton,Flex } from '@chakra-ui/react';
+import { SimpleGrid, Skeleton, Flex } from '@chakra-ui/react';
 import Issue from '../components/Issue';
 import Nav from '../components/Nav';
 
@@ -24,30 +24,31 @@ function Issues() {
 
   return (
     issues && issues.length > 0 ? (
-      <div>
-        <Nav pageTitle='Issues'/>
-        <Flex w={'full'}>
-        <Flex mx={'auto'} h={"fit-content"} w={'90%'} mt={10} p={10} justifyContent={'center'} borderRadius={15} bg="rgba(255,255,255,0.4)">
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} m={5}>
-          {issues.map((issue) => (
-            <>
-            <Issue cloudId={cloudId} issue={issue}/>
-            </>
-          ))}
-        </SimpleGrid>
+      <>
+        <Nav pageTitle='Issues' />
+        <Flex w={'full'} maxH={'fit-content'} minH={'100vh'}>
+          <Flex mx={'auto'} h={"fit-content"} w={'90%'} my={10} p={10} justifyContent={'center'} borderRadius={15} bg="rgba(255,255,255,0.4)">
+            <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} m={5}>
+              {issues.map((issue) => (
+                <>
+                  <Issue cloudId={cloudId} issue={issue} />
+
+                </>
+              ))}
+            </SimpleGrid>
+          </Flex>
         </Flex>
-        </Flex>
-      </div>
+        </>
     ) : (
-      <div>
+      <Flex direction="column" h={"100vh"}>
         <Skeleton h={"5rem"} w={"full"}></Skeleton>
         <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} spacing={20} w={'full'} mx={10} mt={15}>
           <Skeleton w={'xs'} h={"8rem"} borderRadius={20} px="5" />
-          <Skeleton w={'xs'} h={"8rem"} borderRadius={20} px="5"/>
-          <Skeleton w={'xs'} h={"8rem"} borderRadius={20} px="5"/>
-          <Skeleton w={'xs'} h={"8rem"} borderRadius={20} px="5"/>
+          <Skeleton w={'xs'} h={"8rem"} borderRadius={20} px="5" />
+          <Skeleton w={'xs'} h={"8rem"} borderRadius={20} px="5" />
+          <Skeleton w={'xs'} h={"8rem"} borderRadius={20} px="5" />
         </SimpleGrid>
-      </div>
+      </Flex>
     )
   );
 
