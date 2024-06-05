@@ -10,7 +10,7 @@ function Issues() {
 
   const cloudId = localStorage.getItem('cloudId');
   const { id } = useParams();
-
+  console.log(issues)
   useEffect(() => {
     getIssuesByProjectID(cloudId, id)
       .then((data) => {
@@ -31,7 +31,7 @@ function Issues() {
             <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} m={5}>
               {issues.map((issue) => (
                 <>
-                  <Issue cloudId={cloudId} issue={issue} />
+                  <Issue cloudId={cloudId} issue={issue} key={issue.key}/>
 
                 </>
               ))}

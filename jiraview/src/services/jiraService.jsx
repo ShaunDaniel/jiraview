@@ -47,3 +47,19 @@ export const getIssuesByProjectID = async (cloudId, projectId) => {
     return null;
   }
 }
+
+export const getIssueByIssueID = async (cloudId, issueId) => {
+  try {
+    const accessToken = localStorage.getItem('jira_access_token');
+    const response = await axios.get(`https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/issue/${issueId}`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Accept': 'application/json'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Spinner,useToast } from '@chakra-ui/react';
+import { Flex, Spinner,useToast } from '@chakra-ui/react';
 
 const Callback = () => {
 
@@ -59,13 +59,18 @@ const Callback = () => {
   }, []);
 
   return (
+    <Flex h={'100vh'}>
     <Spinner
-      thickness="4px"
-      speed="0.65s"
+      mx={'auto'}
+      my={'auto'}
+      thickness="10px"
+      speed="0.7s"
       emptyColor="gray.200"
       color="blue.500"
       size="xl"
     />
+    </Flex>
+
   );
 };
 

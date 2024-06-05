@@ -11,6 +11,7 @@ function Homepage() {
   const navigate = useNavigate();
   const toast = useToast();
 
+
   useEffect(() => {
     const state = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
@@ -21,6 +22,7 @@ function Homepage() {
         const data = await getCloudId(jiraAccessToken);
         localStorage.setItem('cloudId', data.data[0].id);
         setCloudId(data.data[0].id);
+        navigate(`/projects/`);
       }
       else {
         const jiraClientId = import.meta.env.VITE_APP_CLIENT_ID;
@@ -32,7 +34,7 @@ function Homepage() {
 
     }
 
-    fetchCloudId();
+    fetchCloudId()
   }, []);
 
 
