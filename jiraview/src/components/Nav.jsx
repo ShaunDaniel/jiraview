@@ -15,7 +15,7 @@ function Nav({pageTitle}) {
         <Flex h={'5rem'} bg={'white'} justifyContent={'space-between'}>
             <Flex>
                 <IconButton my={'auto'} mx={5} aria-label="Go back" icon={<IoIosArrowBack />} onClick={goBack} />
-                <Text my={'auto'} fontWeight={700} fontSize={'2rem'}>{pageTitle}</Text>
+                <Text my={'auto'} fontWeight={600} fontSize={'2rem'}>{pageTitle}</Text>
             </Flex>
             <Logout />
         </Flex>

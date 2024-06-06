@@ -60,16 +60,33 @@ function Issue({ issue, cloudId }) {
         });
     };
 
+    const handleTagColor = (statusType) => {
+        switch (statusType) {
+            case 'To Do':
+                return 'blue';
+            case 'In Progress':
+                return 'yellow';
+            case 'Done':
+                return 'green';
+            default:
+                return 'gray';
+        }
+    }
+
 
     return (
         <Box w={'fit-content'} minW={'xs'} key={issue.id} borderRadius={20} p={5} m={5} cursor={'pointer'} _hover={{ transform: "scale(1.015)" }} transition={'transform 0.2s'} dropShadow={'md'} bgColor={'white'} onClick={() => { getIssue(issue.id, cloudId) }}>
-            <Flex>
-                <Image boxSize="50px" src={`https://api.atlassian.com/ex/jira/${cloudId}${issue.img}`} alt={issue.key} />
-                <Text ml={4} fontSize="xl" fontWeight="semibold" lineHeight="short">
-                    {issue.key}
-                </Text>
+            <Flex justifyContent={'space-between'}>
+                <Flex direction={'column'} justifyContent={'end'}>
+                    <Image boxSize="50px" src={issue.fields.issuetype.iconUrl} alt={issue.key} />
+                    <Text fontSize="xl" fontWeight="semibold" lineHeight="short">
+                        {issue.key}
+                    </Text>
+                    <Text>{issue.fields.summary}</Text>
+                </Flex>
+                <Tag colorScheme={handleTagColor(issue.fields.status.name)} h={'fit-content'}>{issue.fields.status.name}</Tag>
             </Flex>
-            <Text mt={4}>{issue.summary}</Text>
+            <Text>{issue.summary}</Text>
 
             <Modal isOpen={isOpen} size={'xl'} onClose={onClose}>
                 <ModalOverlay backdropFilter='auto' backdropBlur='2px' />
@@ -88,11 +105,14 @@ function Issue({ issue, cloudId }) {
                                         <Heading fontWeight={400} size="xl">{activeissue.fields.summary}</Heading>
                                         <Text as={'b'} my={2}>Description</Text>
                                         <Box p={4}>
-                                            {renderContent(activeissue.fields.description.content)}
+                                            {activeissue.fields.description
+                                                ? (activeissue.fields.description.content && renderContent(activeissue.fields.description.content))
+                                                : <Text>No Description</Text>
+                                            }
                                         </Box>
                                     </Flex>
                                     <Flex>
-                                    <IssueModalTable reporter={activeissue.fields.reporter} assignee={activeissue.fields.assignee} />
+                                        <IssueModalTable reporter={activeissue.fields.reporter} assignee={activeissue.fields.assignee} />
                                     </Flex>
                                 </Flex>
                             </>

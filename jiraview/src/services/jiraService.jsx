@@ -35,7 +35,23 @@ export const getProjectData = async (cloudId) => {
 export const getIssuesByProjectID = async (cloudId, projectId) => {
   try {
     const accessToken = localStorage.getItem('jira_access_token');
-    const response = await axios.get(`https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/issue/picker?currentProjectId=${projectId}`, {
+    const body = {
+      "jql": `project = ${projectId}`,
+      "startAt": 0,
+      "maxResults": 100,
+      "fields": [
+        "summary",
+        "status",
+        "assignee",
+        "reporter",
+        "issuetype",
+        "priority",
+        "created",
+        "updated",
+        "description"
+      ]
+    }
+    const response = await axios.post(`https://api.atlassian.com/ex/jira/${cloudId}/rest/api/2/search`,body, {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
         'Accept': 'application/json'

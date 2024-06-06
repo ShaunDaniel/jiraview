@@ -11,7 +11,8 @@ import {
     Avatar,
 } from '@chakra-ui/react'
 
-function IssueModalTable({reporter, assignee}) {
+function IssueModalTable({ reporter, assignee }) {
+
     return (
         <Table variant="simple" h={'fit-content'}>
             <Thead>
@@ -24,6 +25,7 @@ function IssueModalTable({reporter, assignee}) {
                 <Tr>
                     <Td>
                         <Tag px={3} py={1} borderRadius={'full'}>
+
                             <Avatar
                                 size='xs'
                                 name={reporter.displayName}
@@ -34,15 +36,15 @@ function IssueModalTable({reporter, assignee}) {
                         </Tag>
                     </Td>
                     <Td>
-                        <Tag px={3} py={1} borderRadius={'full'}>
-                            <Avatar
-                                size='xs'
-                                name={assignee.displayName}
-                                ml={-1}
-                                mr={2}
-                            />
-                            <TagLabel>{assignee.displayName}</TagLabel>
-                        </Tag>
+                            <Tag px={3} py={1} borderRadius={'full'}>
+                                <Avatar
+                                    size='xs'
+                                    name={assignee ? assignee.displayName : ''}
+                                    ml={-1}
+                                    mr={2}
+                                />
+                                <TagLabel>{assignee ? assignee.displayName : 'Unassigned'}</TagLabel>
+                            </Tag>
                     </Td>
                 </Tr>
             </Tbody>
