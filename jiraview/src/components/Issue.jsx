@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Text, Flex, Image, Heading, Tag, TagLabel, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Button, Avatar } from '@chakra-ui/react';
+import { Box, Text, Flex, Image, Heading, Tag, Divider, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Button, Avatar } from '@chakra-ui/react';
 import { getIssueByIssueID } from '../services/jiraService';
 import IssueModalTable from './IssueModalTable';
 
@@ -75,18 +75,17 @@ function Issue({ issue, cloudId }) {
 
 
     return (
-        <Box w={'fit-content'} minW={'xs'} key={issue.id} borderRadius={20} p={5} m={5} cursor={'pointer'} _hover={{ transform: "scale(1.015)" }} transition={'transform 0.2s'} dropShadow={'md'} bgColor={'white'} onClick={() => { getIssue(issue.id, cloudId) }}>
+        <Box w={'sm'} key={issue.id} borderRadius={20} p={5} m={5} cursor={'pointer'} _hover={{ transform: "scale(1.015)" }} transition={'transform 0.2s'} dropShadow={'md'} bgColor={'white'} onClick={() => { getIssue(issue.id, cloudId) }}>
             <Flex justifyContent={'space-between'}>
                 <Flex direction={'column'} justifyContent={'end'}>
                     <Image boxSize="50px" src={issue.fields.issuetype.iconUrl} alt={issue.key} />
                     <Text fontSize="xl" fontWeight="semibold" lineHeight="short">
                         {issue.key}
                     </Text>
-                    <Text>{issue.fields.summary}</Text>
+                    <Text>{issue.fields.summary.substring(0, 50) + (issue.fields.summary.length > 50 ? "..." : "")}</Text>
                 </Flex>
-                <Tag colorScheme={handleTagColor(issue.fields.status.name)} h={'fit-content'}>{issue.fields.status.name}</Tag>
+                <Tag minW={'fit-content'} colorScheme={handleTagColor(issue.fields.status.name)} h={'fit-content'}>{issue.fields.status.name}</Tag>
             </Flex>
-            <Text>{issue.summary}</Text>
 
             <Modal isOpen={isOpen} size={'xl'} onClose={onClose}>
                 <ModalOverlay backdropFilter='auto' backdropBlur='2px' />
@@ -102,9 +101,10 @@ function Issue({ issue, cloudId }) {
                                 </Flex>
                                 <Flex>
                                     <Flex direction={'column'} w={"60%"}>
-                                        <Heading fontWeight={400} size="xl">{activeissue.fields.summary}</Heading>
-                                        <Text as={'b'} my={2}>Description</Text>
-                                        <Box p={4}>
+                                        <Heading fontWeight={700} size="xl">{activeissue.fields.summary}</Heading>
+                                        <Divider w={'50%'} my={3}></Divider>
+                                        <Text my={2}>Description</Text>
+                                        <Box bgColor={'gray.50'} borderRadius={'xl'} p={10}>
                                             {activeissue.fields.description
                                                 ? (activeissue.fields.description.content && renderContent(activeissue.fields.description.content))
                                                 : <Text>No Description</Text>
@@ -121,9 +121,7 @@ function Issue({ issue, cloudId }) {
                         )}
                     </ModalBody>
                     <ModalFooter>
-                        <Button colorScheme="blue" mr={3} onClick={onClose}>
-                            Close
-                        </Button>
+
                     </ModalFooter>
                 </ModalContent>
             </Modal>

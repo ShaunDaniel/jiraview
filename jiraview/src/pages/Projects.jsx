@@ -4,6 +4,7 @@ import { SimpleGrid, Flex, Text, Skeleton, SkeletonText } from "@chakra-ui/react
 import ProjectCard from '../components/ProjectCard';
 import { useNavigate } from 'react-router-dom';
 import Nav from '../components/Nav';
+import Cookies from 'js-cookie';
 
 
 
@@ -11,15 +12,23 @@ import Nav from '../components/Nav';
 function Projects() {
   const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
-  const cloudId = localStorage.getItem('cloudId');
+
+  const [cloudId,setCloudId] = useState(Cookies.get('cloudId'));
+  
   useEffect(() => {
     const fetchProjects = async () => {
-
       const data = await getProjectData(cloudId);
       setProjects(data);
       console.log(projects)
     }
-    fetchProjects();
+
+    if(cloudId && cloudId.length>0){
+      fetchProjects();
+    }
+    else{
+      navigate('/')
+    }
+
   }
     , []);
 

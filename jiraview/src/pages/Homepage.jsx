@@ -2,31 +2,31 @@ import React, { useEffect, useState } from 'react';
 import { getCloudId } from '../services/jiraService';
 import { Box, Button, Flex, Text, useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 function Homepage() {
   const [cloudId, setCloudId] = useState(null);
   const [authUrl, setAuthUrl] = useState(null);
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
 
 
   useEffect(() => {
     const state = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-  
+
     const fetchCloudId = async () => {
-      const jiraAccessToken = localStorage.getItem('jira_access_token');
+      const jiraAccessToken = Cookies.get('jira_access_token');
       try {
         if (jiraAccessToken) {
           const data = await getCloudId(jiraAccessToken);
           if (data && data.data[0].id) {
-            localStorage.setItem('cloudId', data.data[0].id);
+            Cookies.set('cloudId', data.data[0].id, { secure: true, sameSite: 'strict' });
             setCloudId(data.data[0].id);
             navigate(`/projects/`);
           } else {
-            // If data is null, remove everything from localStorage and set cloudId and authUrl to null
-            localStorage.removeItem('jira_access_token');
-            localStorage.removeItem('cloudId');
+            Cookies.remove('jira_access_token');
+            Coookies.remove('cloudId')
             setCloudId(null);
             setAuthUrl(null);
             toast({
@@ -36,6 +36,7 @@ function Homepage() {
               duration: 5000,
               isClosable: true,
             });
+            navigate(`/`)
 
           }
         } else {
@@ -48,7 +49,7 @@ function Homepage() {
         console.error(error)
       }
     }
-  
+
     fetchCloudId()
   }, []);
 
@@ -64,7 +65,7 @@ function Homepage() {
           <Flex direction={'column'} p={'10'}>
             <Text fontSize={'2rem'} fontWeight={'700'}>JiraView</Text>
             <Text fontSize={'1rem'} fontWeight={'300'} mt={5} mb={2}>Connect your Jira account to start - </Text>
-            {cloudId && cloudId.length > 0 ? 
+            {cloudId && cloudId.length > 0 ?
               (() => {
                 navigate(`/projects/`);
                 toast({
@@ -75,7 +76,7 @@ function Homepage() {
                   isClosable: true,
                 });
               })()
-              : 
+              :
               <Button isLoading={loading} colorScheme='blue' loadingText="Loading.." onClick={() => handleLogin()}>Connect to Jira</Button>}
           </Flex>
         </Flex>

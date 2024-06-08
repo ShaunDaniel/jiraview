@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaSignOutAlt } from "react-icons/fa";
 import { useToast } from "@chakra-ui/react";
 import { IconButton } from "@chakra-ui/react";
+import Cookies from 'js-cookie';
 
 function Logout() {
 
@@ -10,8 +11,8 @@ function Logout() {
     const toast = useToast();
 
     function logout() {
-        localStorage.removeItem('jira_access_token');
-        localStorage.removeItem('cloudId');
+      Cookies.remove('jira_access_token');
+      Cookies.remove('cloudId')
         toast({
             title: "Logged out",
             description: "Logged out successfully.",

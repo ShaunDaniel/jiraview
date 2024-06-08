@@ -1,10 +1,14 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
-export const getCloudId = async (accessToken) => {
+// Get the access token once
+const accessToken = Cookies.get('jira_access_token');
+
+export const getCloudId = async (accessTokenData) => {
   try {
     const response = await axios.get('https://api.atlassian.com/oauth/token/accessible-resources', {
       headers: {
-        'Authorization': `Bearer ${accessToken}`,
+        'Authorization': `Bearer ${accessTokenData}`,
         'Accept': 'application/json'
       }
     });
@@ -17,7 +21,6 @@ export const getCloudId = async (accessToken) => {
 
 export const getProjectData = async (cloudId) => {
   try {
-    const accessToken = localStorage.getItem('jira_access_token');
     const response = await axios.get(`https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/project`, {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
@@ -32,13 +35,12 @@ export const getProjectData = async (cloudId) => {
 };
 
 
-export const getIssuesByProjectID = async (cloudId, projectId) => {
+export const getIssuesByProjectID = async (cloudId, projectId, startAt) => {
   try {
-    const accessToken = localStorage.getItem('jira_access_token');
     const body = {
       "jql": `project = ${projectId}`,
-      "startAt": 0,
-      "maxResults": 100,
+      "startAt": startAt,
+      "maxResults": 12,
       "fields": [
         "summary",
         "status",
@@ -60,13 +62,13 @@ export const getIssuesByProjectID = async (cloudId, projectId) => {
     return response.data;
   } catch (error) {
     console.error(error);
+
     return null;
   }
 }
 
 export const getIssueByIssueID = async (cloudId, issueId) => {
   try {
-    const accessToken = localStorage.getItem('jira_access_token');
     const response = await axios.get(`https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/issue/${issueId}`, {
       headers: {
         'Authorization': `Bearer ${accessToken}`,

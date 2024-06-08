@@ -1,36 +1,53 @@
 import React, { useState, useEffect } from 'react'
-import { getIssuesByProjectID } from '../services/jiraService';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaChevronDown } from 'react-icons/fa';
 import {
   Menu,
   MenuButton,
   MenuList,
-  MenuItem,
-  Button,
-  MenuItemOption,
-  MenuGroup,
+  SimpleGrid,
+  Skeleton,
+  Flex,
   VStack,
+  Button,
   Checkbox,
-  MenuDivider,
 } from '@chakra-ui/react'
+import Cookies from 'js-cookie';
 
-import { SimpleGrid, Skeleton, Flex } from '@chakra-ui/react';
 import Issue from '../components/Issue';
 import Nav from '../components/Nav';
+import { getIssuesByProjectID } from '../services/jiraService';
 
 function Issues() {
+  
+  
   const [issues, setIssues] = useState([]);
+  const [startAt, setStartAt] = useState(0);
+  const [totalIssues, setTotalIssues] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+
+
   const [filters, setFilters] = useState({
+    
     selectedIssueTypes: [],
     selectedStatuses: []
   });
 
-  const cloudId = localStorage.getItem('cloudId');
+  const itemsPerPage = 12;
+  const cloudId = Cookies.get('cloudId')
   const { id } = useParams();
-
   const navigate = useNavigate();
 
+
+  const handleNext = () => {
+    setStartAt(prevStartAt => prevStartAt + 12); 
+    setCurrentPage(prevPage => prevPage + 1);
+  };
+
+  const handleBack = () => {
+    setStartAt(prevStartAt => Math.max(prevStartAt - 12, 0)); // Decrease startAt by 12, but not below 0
+    setCurrentPage(prevPage => prevPage - 1);
+  };
 
   const handleFilterChange = (filterType, value) => {
     setFilters(prevFilters => {
@@ -56,13 +73,15 @@ function Issues() {
   });
 
 
-
+  console.log(startAt)
   console.log(issues)
+
   useEffect(() => {
     if (cloudId && cloudId.length > 0) {
-      getIssuesByProjectID(cloudId, id)
+      getIssuesByProjectID(cloudId, id, startAt)
         .then((data) => {
           setIssues(data.issues);
+          setTotalIssues(data.total);         
           console.log(issues)
         })
         .catch((error) => {
@@ -71,7 +90,7 @@ function Issues() {
     } else {
       navigate('/')
     }
-  }, [cloudId, id]);
+  }, [cloudId, id,startAt]);
 
 
   return (
@@ -106,8 +125,12 @@ function Issues() {
               </MenuList>
             </Menu>
           </Flex>
-          <Flex mx={'auto'} h={"fit-content"} w={'90%'} my={10} p={10} justifyContent={'center'} borderRadius={15} bg="rgba(255,255,255,0.4)">
+          <Flex direction={'column'} mx={'auto'} h={"fit-content"} w={'90%'} my={10} p={10} justifyContent={'center'} borderRadius={15} bg="rgba(255,255,255,0.4)">
+            <Flex justifyContent={'space-between'}>
+            <Button colorScheme={'blue'} onClick={handleBack} isDisabled={currentPage===1}>{'<<'}</Button>
+            <Button colorScheme={'blue'} onClick={handleNext} isDisabled={currentPage * itemsPerPage >= totalIssues}>{'>>'}</Button>
 
+            </Flex>
             <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} m={5}>
               {filteredIssues.length > 0 ? (
                 filteredIssues.map(issue => (
